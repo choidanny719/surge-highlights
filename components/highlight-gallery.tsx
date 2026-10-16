@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import type { Highlight } from "@/lib/highlights";
 import { HighlightGrid } from "./highlight-grid";
+import { CreateHighlight } from "./create-highlight";
 
 export function HighlightGallery({
   initialHighlights,
@@ -14,6 +15,16 @@ export function HighlightGallery({
 }) {
   const router = useRouter();
   const [retrying, startTransition] = useTransition();
+  const [created, setCreated] = useState<Highlight[]>([]);
+  const [announcement, setAnnouncement] = useState("");
+  const createdIds = new Set(created.map((highlight) => highlight.id));
+  const highlights = [...created, ...initialHighlights.filter((highlight) => !createdIds.has(highlight.id))];
+
+  function addHighlight(highlight: Highlight) {
+    setCreated((current) => [highlight, ...current]);
+    setAnnouncement(`${highlight.title} was added to your highlights.`);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }
 
   return (
     <section aria-label="Shared memories">
@@ -29,10 +40,12 @@ export function HighlightGallery({
           </button>
         </div>
       )}
-      {!loadFailed && initialHighlights.length === 0 && (
+      {!loadFailed && highlights.length === 0 && (
         <p className="gallery-message">No highlights yet. Share the first one!</p>
       )}
-      <HighlightGrid highlights={initialHighlights} />
+      <HighlightGrid highlights={highlights} />
+      <CreateHighlight onCreate={addHighlight} />
+      <p className="sr-only" role="status">{announcement}</p>
     </section>
   );
 }

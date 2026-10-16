@@ -3,6 +3,8 @@ import { GallerySkeleton } from "@/components/gallery-skeleton";
 import { HighlightGallery } from "@/components/highlight-gallery";
 import { getHighlights } from "@/lib/surge";
 
+export const dynamic = "force-dynamic";
+
 async function Highlights() {
   try {
     const highlights = await getHighlights();

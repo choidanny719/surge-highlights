@@ -14,10 +14,14 @@ export function HighlightGrid({ highlights }: { highlights: Highlight[] }) {
     function arrangeCards() {
       if (!grid) return;
 
-      const columns = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+      const columns = Number(getComputedStyle(grid).getPropertyValue("--columns")) || 1;
       const heights = Array<number>(columns).fill(0);
 
       grid.dataset.masonry = "true";
+
+      Array.from(grid.children).forEach((item, index) => {
+        (item as HTMLLIElement).style.gridColumn = String(index % columns + 1);
+      });
 
       Array.from(grid.children).forEach((item, index) => {
         const cell = item as HTMLLIElement;
