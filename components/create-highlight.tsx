@@ -60,6 +60,7 @@ export function CreateHighlight({ onCreate }: { onCreate: (highlight: Highlight)
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validation.values),
+        signal: AbortSignal.timeout(20000),
       });
       const data = await response.json();
 

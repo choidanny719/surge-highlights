@@ -6,12 +6,8 @@ import { getHighlights } from "@/lib/surge";
 export const dynamic = "force-dynamic";
 
 async function Highlights() {
-  try {
-    const highlights = await getHighlights();
-    return <HighlightGallery initialHighlights={highlights} />;
-  } catch {
-    return <HighlightGallery initialHighlights={[]} loadFailed />;
-  }
+  const highlights = await getHighlights().catch(() => null);
+  return <HighlightGallery initialHighlights={highlights ?? []} loadFailed={highlights === null} />;
 }
 
 export default function Home() {

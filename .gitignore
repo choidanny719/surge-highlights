@@ -3,6 +3,7 @@
 /out/
 /coverage/
 /.vercel/
+/.vitest/
 .env*
 !.env.example
 *.tsbuildinfo
