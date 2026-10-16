@@ -2,6 +2,7 @@ import "server-only";
 import { isHighlight, type Highlight, type HighlightInput } from "./highlights";
 
 const baseUrl = "https://surgetakehome.vercel.app/api";
+const starterIds = new Set(["1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 
 function endpoint(path: string) {
   const key = process.env.SURGE_ACCESS_KEY?.trim();
@@ -25,7 +26,10 @@ export async function getHighlights(): Promise<Highlight[]> {
     throw new Error("The highlights service returned an invalid response.");
   }
 
-  return data;
+  const starters = data.filter((highlight) => starterIds.has(String(highlight.id)));
+  const additions = data.filter((highlight) => !starterIds.has(String(highlight.id)));
+
+  return [...additions.reverse(), ...starters];
 }
 
 export async function createHighlight(input: HighlightInput): Promise<Highlight> {

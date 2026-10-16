@@ -4,6 +4,8 @@ The SFU Surge take-home challenge, built with Next.js, TypeScript, and plain CSS
 
 Loads highlights from the supplied API and lets you create one without leaving the page. Cards use one, two, or three columns at the mobile, 788px, and 1280px layouts.
 
+New highlights stay at the top after a refresh, above the nine starter cards.
+
 ## Run locally
 
 Use Node.js 24.

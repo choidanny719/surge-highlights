@@ -24,6 +24,24 @@ describe("Surge requests", () => {
     expect(await getHighlights()).toEqual([]);
   });
 
+  it("loads added highlights newest first while keeping the starter cards in order", async () => {
+    const starters = Array.from({ length: 9 }, (_, index) => ({ ...highlight, id: index + 1 }));
+    const first = { ...highlight, id: 10, title: "First addition" };
+    const latest = { ...highlight, id: 11, title: "Latest addition" };
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json([...starters, first, latest])));
+
+    expect(await getHighlights()).toEqual([latest, first, ...starters]);
+  });
+
+  it("identifies starter cards by ID when some are missing or IDs are strings", async () => {
+    const starter = { ...highlight, id: "9" };
+    const first = { ...highlight, id: "10" };
+    const latest = { ...highlight, id: "11" };
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(Response.json([starter, first, latest])));
+
+    expect(await getHighlights()).toEqual([latest, first, starter]);
+  });
+
   it("does not make a request without a configured key", async () => {
     vi.stubEnv("SURGE_ACCESS_KEY", "");
     const fetchMock = vi.fn();
