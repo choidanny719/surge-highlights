@@ -1,3 +1,17 @@
+import { Suspense } from "react";
+import { GallerySkeleton } from "@/components/gallery-skeleton";
+import { HighlightGallery } from "@/components/highlight-gallery";
+import { getHighlights } from "@/lib/surge";
+
+async function Highlights() {
+  try {
+    const highlights = await getHighlights();
+    return <HighlightGallery initialHighlights={highlights} />;
+  } catch {
+    return <HighlightGallery initialHighlights={[]} loadFailed />;
+  }
+}
+
 export default function Home() {
   return (
     <main className="page">
@@ -9,7 +23,9 @@ export default function Home() {
           unforgettable memories, and the stories that make your life shine.
         </p>
       </header>
-      <p role="status">Loading highlights…</p>
+      <Suspense fallback={<GallerySkeleton />}>
+        <Highlights />
+      </Suspense>
     </main>
   );
 }
